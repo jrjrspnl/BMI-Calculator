@@ -408,7 +408,7 @@ const Input = () => {
                 accusamus cum ipsam sunt aperiam saepe quasi minus ullam animi
                 quisquam adipisci ea explicabo voluptas expedita, eum esse quam
                 sequi, numquam id quibusdam similique recusandae soluta, nostrum
-                inventore? Nisi, ratione ipsam.
+                inventore? Nisi, ratione.
               </p>
             </div>
           </div>
