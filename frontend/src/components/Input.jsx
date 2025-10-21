@@ -446,7 +446,7 @@ const Input = () => {
                 <div>
                   <p className="font-semibold text-neutral-700 text-sm md:text-base">
                     ⚕️ Health Note:{" "}
-                    <span className="text-neural-400 font-normal">
+                    <span className="text-neutral-700 font-normal">
                       {bmiResult?.note ?? ""}
                     </span>
                   </p>
