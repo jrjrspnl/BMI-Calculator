@@ -15,6 +15,18 @@ const Input = () => {
   const [bmiResult, setBmiResult] = useState(null);
 
   const handleCalculate = async () => {
+    if (
+      !sex ||
+      !activityLevel ||
+      (!heightCm && (!heightFeet || !heightInches)) ||
+      (!weightKg && !weightPounds) ||
+      !age
+    ) {
+      alert("Please fill in all required fields.");
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
     const data = {
@@ -43,7 +55,7 @@ const Input = () => {
       setBmiResult(result);
       setShowResults(true);
     } catch (error) {
-      console.error("Error calculating BMI:", error);
+      alert("Something went wrong. Please try again.", error);
     } finally {
       setLoading(false);
     }
@@ -352,12 +364,12 @@ const Input = () => {
       )}
 
       {showResults && (
-        <div className="mt-5 w-full max-w-4xl px-4">
+        <div className="mt-5 w-full max-w-4xl px-2">
           <div className="border border-blue-300 bg-neutral-50 shadow-md rounded-lg overflow-hidden">
             <div className="bg-gradient-to-r from-blue-700 to-cyan-600 text-white px-4 sm:px-6 py-4 sm:py-5 font-semibold text-base sm:text-lg">
               Adult BMI Calculator
             </div>
-            <div className="p-5">
+            <div className="p-10">
               <div className="flex justify-end">
                 <h1
                   onClick={() => setShowResults(false)}
@@ -367,45 +379,53 @@ const Input = () => {
                 </h1>
               </div>
               <div className="pb-5 mt-5">
-                <h1 className="text-2xl lg:text-3xl tracking-wide pb-2">
+                <h1 className="text-2xl lg:text-3xl tracking-wide pb-4 font-medium text-neutral-800 ">
                   Information Provided
                 </h1>
-                <div className="flex justify-around lg:flex-row gap-5 lg:gap-20 py-5">
+                <hr className=" border-gray-400" />
+                <div className="flex flex-col md:flex-row justify-between lg:flex-row gap-5 lg:gap-20 pt-5">
                   <div>
-                    <h1 className="text-lg font-medium flex-col">Height: </h1>
-                    <span className="text-green-600 font-bold">
+                    <h1 className="text-sm md:text-lg font-medium flex-col">
+                      Height:{" "}
+                    </h1>
+                    <span className="text-green-600 font-semibold">
                       {heightCm || `${heightFeet}'${heightInches}"`}
                     </span>
                   </div>
 
                   <div>
-                    <h1 className="text-lg font-medium ">Weight:</h1>
-                    <span className="text-green-600 font-bold">
+                    <h1 className="text-md md:text-lg font-medium ">Weight:</h1>
+                    <span className="text-green-600 font-semibold">
                       {weightKg || `${weightPounds} lbs`}
                     </span>
                   </div>
 
                   <div>
-                    <h1 className="text-lg font-medium ">Age:</h1>
-                    <span className="text-green-600 font-bold">{age}</span>
+                    <h1 className="text-md md:text-lg font-medium ">Age:</h1>
+                    <span className="text-green-600 font-semibold">{age}</span>
                   </div>
 
                   <div>
-                    <h1 className="text-lg font-medium">Sex:</h1>
-                    <span className="text-green-600 font-bold">{sex}</span>
+                    <h1 className="text-md md:text-lg font-medium">Sex:</h1>
+                    <span className="text-green-600 font-semibold">{sex}</span>
                   </div>
+
                   <div>
-                    <h1 className="text-lg font-medium">Activity level:</h1>
-                    <span className="text-green-600 font-bold">
+                    <h1 className="text-md md:text-lg font-medium">
+                      Activity level:
+                    </h1>
+                    <span className="text-green-600 font-semibold">
                       {activityLevel}
                     </span>
                   </div>
                 </div>
               </div>
+
               <div>
-                <h1 className="text-2xl lg:text-3xltracking-wide pb-2">
-                  Detailed Health Results
+                <h1 className="text-2xl lg:text-3xl tracking-wide pb-4 font-medium text-neutral-800  mt-4">
+                  Detailed Results
                 </h1>
+                <hr className="mb-5 border-gray-400" />
                 <div className="border border-gray-300 p-8 rounded-xl bg-white mb-6">
                   <div className="flex flex-col items-center justify-center gap-4">
                     <h1 className="text-5xl font-bold text-blue-600">
@@ -415,22 +435,31 @@ const Input = () => {
                     <h2 className="text-2xl font-semibold text-green-600">
                       {bmiResult?.category ?? ""}
                     </h2>
-                    <p className="text-gray-600 text-center max-w-md mt-2">
+                    <p className="text-gray-600 text-center max-w-md mt-2 text-sm md:text-base">
                       {bmiResult?.feedback ?? ""}
                     </p>
                   </div>
                 </div>
+                <div>
+                  <p className="font-semibold text-neutral-700 text-sm md:text-base">
+                    ⚕️ Health Note:{" "}
+                    <span className="text-neural-400 font-normal">
+                      {bmiResult?.note ?? ""}
+                    </span>
+                  </p>
+                  <hr className="mt-4 border-gray-400" />
+                </div>
 
-                <h2 className="text-2xl tracking-wide pb-3 pt-4">
+                <h2 className="font-semibold text-2xl tracking-wide pb-3 pt-4 text-neutral-800">
                   BMI Categories
                 </h2>
-                <table className="w-full border-collapse">
+                <table className="w-full border-collapse bg-neutral-100">
                   <thead>
                     <tr className="bg-neutral-50 border-b border-gray-300">
-                      <th className="text-left px-6 py-3 font-semibold text-gray-700">
+                      <th className="text-left px-6 py-3 font-semibold text-gray-700 bg-green-300">
                         BMI Category
                       </th>
-                      <th className="text-left px-6 py-3 font-semibold text-gray-700">
+                      <th className="text-left px-6 py-3 font-semibold text-gray-700 bg-green-300">
                         BMI Range
                       </th>
                     </tr>
@@ -478,19 +507,17 @@ const Input = () => {
 
               <div className="px-6 py-3 border-y border-gray-200">
                 <a
-                  href="#"
+                  href="/bmi_tbl.pdf"
                   className="text-sm text-blue-600 font-medium hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   View BMI Tables
                 </a>
               </div>
-              <p className="text-lg pt-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
-                accusamus cum ipsam sunt aperiam saepe quasi minus ullam animi
-                quisquam adipisci ea explicabo voluptas expedita, eum esse quam
-                sequi, numquam id quibusdam similique recusandae soluta, nostrum
-                inventore? Nisi, ratione ipsum.
-              </p>
+              <div>
+                {/* Additional feedback or recommendations can be displayed here */}
+              </div>
             </div>
           </div>
         </div>
