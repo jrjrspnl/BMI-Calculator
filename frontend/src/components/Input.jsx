@@ -152,7 +152,7 @@ const Input = () => {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="text-medium font-medium text-neutral-500 underline hover:text-blue-600 transition cursor-pointer"
+                  className="text-sm d:text-medium font-medium text-neutral-500 underline hover:text-blue-600 transition cursor-pointer"
                 >
                   Reset
                 </button>
@@ -372,7 +372,7 @@ const Input = () => {
             <div className="bg-gradient-to-r from-blue-700 to-cyan-600 text-white px-4 sm:px-6 py-4 sm:py-5 font-semibold text-base sm:text-lg">
               Adult BMI Calculator
             </div>
-            <div className="p-10">
+            <div className="p-5 md:p-10">
               <div className="flex justify-end">
                 <h1
                   onClick={() => setShowResults(false)}
