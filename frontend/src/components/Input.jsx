@@ -12,22 +12,36 @@ const Input = () => {
   const [activityLevel, setActivityLevel] = useState("");
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [bmiResult, setBmiResult] = useState(null);
 
   const handleCalculate = async () => {
     setLoading(true);
 
-    const data = {};
+    const data = {
+      unit_system: unitSystem,
+      height_feet: heightFeet ? parseFloat(heightFeet) : null,
+      height_inches: heightInches ? parseFloat(heightInches) : null,
+      height_cm: heightCm ? parseFloat(heightCm) : null,
+      weight_pounds: weightPounds ? parseFloat(weightPounds) : null,
+      weight_kg: weightKg ? parseFloat(weightKg) : null,
+      age: age ? parseInt(age) : null,
+      sex,
+      activity_level: activityLevel,
+    };
 
     try {
-      const response = await fetch("", {
+      const response = await fetch("http://127.0.0.1:5001/calculate_bmi", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
+
       const result = await response.json();
-      setShowResults(result);
+      console.log("BMI Result:", result);
+      setBmiResult(result);
+      setShowResults(true);
     } catch (error) {
       console.error("Error calculating BMI:", error);
     } finally {
@@ -45,6 +59,24 @@ const Input = () => {
     setSex("");
     setActivityLevel("");
     setShowResults(false);
+  };
+
+  const getRowClass = (category) => {
+    if (!bmiResult?.category) return "";
+
+    switch (bmiResult.category) {
+      case "Underweight":
+        return category === "Underweight" ? "bg-yellow-100" : "";
+      case "Healthy":
+      case "Normal":
+        return category === "Healthy" ? "bg-green-100" : "";
+      case "Overweight":
+        return category === "Overweight" ? "bg-orange-100" : "";
+      case "Obesity":
+        return category === "Obesity" ? "bg-red-100" : "";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -338,12 +370,36 @@ const Input = () => {
                 <h1 className="text-2xl lg:text-3xl tracking-wide pb-2">
                   Information Provided
                 </h1>
-                <div className="flex flex-col lg:flex-row gap-5 lg:gap-20 py-5">
-                  <h1 className="text-lg font-medium">Height: </h1>
-                  <h1 className="text-lg font-medium">Weight: </h1>
-                  <h1 className="text-lg font-medium">Age: </h1>
-                  <h1 className="text-lg font-medium">Sex: </h1>
-                  <h1 className="text-lg font-medium">Activity level: </h1>
+                <div className="flex justify-around lg:flex-row gap-5 lg:gap-20 py-5">
+                  <div>
+                    <h1 className="text-lg font-medium flex-col">Height: </h1>
+                    <span className="text-green-600 font-bold">
+                      {heightCm || `${heightFeet}'${heightInches}"`}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h1 className="text-lg font-medium ">Weight:</h1>
+                    <span className="text-green-600 font-bold">
+                      {weightKg || `${weightPounds} lbs`}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h1 className="text-lg font-medium ">Age:</h1>
+                    <span className="text-green-600 font-bold">{age}</span>
+                  </div>
+
+                  <div>
+                    <h1 className="text-lg font-medium">Sex:</h1>
+                    <span className="text-green-600 font-bold">{sex}</span>
+                  </div>
+                  <div>
+                    <h1 className="text-lg font-medium">Activity level:</h1>
+                    <span className="text-green-600 font-bold">
+                      {activityLevel}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div>
@@ -352,14 +408,15 @@ const Input = () => {
                 </h1>
                 <div className="border border-gray-300 p-8 rounded-xl bg-white mb-6">
                   <div className="flex flex-col items-center justify-center gap-4">
-                    <h1 className="text-5xl font-bold text-blue-600">21.6</h1>
+                    <h1 className="text-5xl font-bold text-blue-600">
+                      {" "}
+                      {bmiResult?.bmi?.toFixed(1) ?? "—"}
+                    </h1>
                     <h2 className="text-2xl font-semibold text-green-600">
-                      Healthy Weight
+                      {bmiResult?.category ?? ""}
                     </h2>
                     <p className="text-gray-600 text-center max-w-md mt-2">
-                      Your BMI is in the healthy range. Maintain your current
-                      lifestyle with balanced nutrition and regular physical
-                      activity.
+                      {bmiResult?.feedback ?? ""}
                     </p>
                   </div>
                 </div>
@@ -379,27 +436,37 @@ const Input = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-gray-200">
+                    <tr
+                      className={`border-b border-gray-200 ${getRowClass(
+                        "Underweight"
+                      )}`}
+                    >
                       <td className="px-6 py-3 font-medium">Underweight</td>
                       <td className="px-6 py-3 text-sm md:text-base">
                         Below 18.5
                       </td>
                     </tr>
-                    <tr className="border-b border-gray-200 bg-green-50">
+                    <tr
+                      className={`border-b border-gray-200 ${getRowClass(
+                        "Healthy"
+                      )}`}
+                    >
                       <td className="px-6 py-3 font-medium">Healthy</td>
                       <td className="px-6 py-3 text-sm md:text-base">
                         18.5 – 24.9
                       </td>
                     </tr>
-                    <tr className="border-b border-gray-200">
-                      <td className="px-6 py-3 font-medium text-sm md:text-base">
-                        Overweight
-                      </td>
+                    <tr
+                      className={`border-b border-gray-200 ${getRowClass(
+                        "Overweight"
+                      )}`}
+                    >
+                      <td className="px-6 py-3 font-medium">Overweight</td>
                       <td className="px-6 py-3 text-sm md:text-base">
                         25.0 – 29.9
                       </td>
                     </tr>
-                    <tr>
+                    <tr className={`${getRowClass("Obesity")}`}>
                       <td className="px-6 py-3 font-medium">Obesity</td>
                       <td className="px-6 py-3 text-sm md:text-base">
                         30.0 or above

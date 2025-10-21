@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 EXERCISE_API_URL = "https://exercisedb.p.rapidapi.com/exercises"
 HEADERS = {
-    "x-rapidapi-key": "YOUR_RAPIDAPI_KEY",
+    "x-rapidapi-key": "5ea4c5268emshd8c69dd0ecdab5ep1013bfjsn096490deb16d",
     "x-rapidapi-host": "exercisedb.p.rapidapi.com"
 }
 

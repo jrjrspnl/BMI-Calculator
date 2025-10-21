@@ -10,11 +10,11 @@ def classify_bmi(bmi):
     else:
         return "Obese"
 
-def recommend_exercise(bmi_category):
+def recommend_exercise(category):
     rules = {
-        "Underweight": ["yoga", "strength"],
-        "Normal weight": ["cardio", "flexibility"],
-        "Overweight": ["low impact", "aerobic"],
-        "Obese": ["walking", "stretching"]
+        "Underweight": ["chest", "back"],        # focus on strength
+        "Normal": ["cardio", "upper arms"],      # maintain balance
+        "Overweight": ["cardio", "waist"],       # focus on fat burn
+        "Obese": ["cardio", "lower legs"]        # low-impact movement
     }
-    return rules.get(bmi_category, [])
+    return rules.get(category, ["cardio"])
