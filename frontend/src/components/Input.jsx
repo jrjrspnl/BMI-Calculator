@@ -13,12 +13,26 @@ const Input = () => {
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
     setLoading(true);
-    setTimeout(() => {
+
+    const data = {};
+
+    try {
+      const response = await fetch("", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      setShowResults(result);
+    } catch (error) {
+      console.error("Error calculating BMI:", error);
+    } finally {
       setLoading(false);
-      setShowResults(true);
-    }, 1500);
+    }
   };
 
   const handleReset = () => {
