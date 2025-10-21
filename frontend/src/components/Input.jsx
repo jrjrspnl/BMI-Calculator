@@ -42,13 +42,16 @@ const Input = () => {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/calculate_bmi", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://bmi-calculator-p1af.onrender.com/calculate_bmi",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const result = await response.json();
       console.log("BMI Result:", result);
