@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify,render_template
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Allow requests from React frontend
+CORS(app) 
 
 @app.route("/calculate_bmi", methods=["POST"])
 
@@ -19,7 +19,6 @@ def calculate_bmi():
     sex = data.get("sex")
     activity_level = data.get("activity_level")
 
-    # Convert to metric if needed
     try:
         if unit_system == "standard":
             height_m = ((float(height_feet) * 12) + float(height_inches)) * 0.0254
@@ -93,7 +92,12 @@ def calculate_bmi():
                 "Your BMI result has been calculated. For more accurate advice, consider reviewing "
                 "your daily habits, diet, and physical activity."
             )
-        
+            
+        note = (
+            "\n\n BMI is a screening measure and does not diagnose disease or health status. "
+            "Consult your healthcare provider to discuss your results, as they can help identify possible causes "
+            "and recommend personalized treatment or lifestyle adjustments."
+        )
 
         result = {
             "bmi": round(bmi, 1),
@@ -101,29 +105,14 @@ def calculate_bmi():
             "age": age,
             "sex": sex,
             "activity_level": activity_level,
-            "feedback": feedback
+            "feedback": feedback,
+            "note": note
         }
 
         return jsonify(result), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-# def recommend_exercise(category):
-#     rules = {
-#         "Underweight": ["chest", "back"],        # focus on strength
-#         "Normal": ["cardio", "upper arms"],      # maintain balance
-#         "Overweight": ["cardio", "waist"],       # focus on fat burn
-#         "Obese": ["cardio", "lower legs"]        # low-impact movement
-#     }
-#     return rules.get(category, ["cardio"])
-
-
-# EXERCISE_API_URL = "https://exercisedb.p.rapidapi.com/exercises"
-# HEADERS = {
-#     "x-rapidapi-key": "5ea4c5268emshd8c69dd0ecdab5ep1013bfjsn096490deb16d",
-#     "x-rapidapi-host": "exercisedb.p.rapidapi.com"
-# }
 
 if __name__ == "__main__":
     app.run(debug=True,port=5001)
