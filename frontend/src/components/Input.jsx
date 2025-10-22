@@ -16,12 +16,6 @@ const Input = () => {
   const [showResults, setShowResults] = useState(false);
   const [bmiResult, setBmiResult] = useState(null);
 
-  const filteredExercises = exercise.exercises.filter((ex) =>
-    ex.tags.some(
-      (tag) => tag.toLowerCase() === bmiResult?.category?.toLowerCase()
-    )
-  );
-
   const handleCalculate = async () => {
     if (
       !sex ||
@@ -575,7 +569,7 @@ const Input = () => {
               </div>
 
               <div>
-                {bmiResult?.category && filteredExercises.length > 0 && (
+                {bmiResult?.category && exercise[bmiResult.category] && (
                   <div className="mt-6">
                     <h1 className="text-2xl lg:text-2xl pb-4 font-medium text-blue-600  mt-4">
                       Recommended Exercises for You
@@ -583,23 +577,23 @@ const Input = () => {
                     <hr className="mb-5 border-gray-400" />
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                      {filteredExercises.map((ex, index) => (
+                      {exercise[bmiResult.category].map((item, index) => (
                         <div
                           key={index}
                           className="bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden cursor-pointer"
                         >
                           <img
-                            src={ex.image}
-                            alt={ex.name}
+                            src={item.image}
+                            alt={item.title}
                             className="w-full h-48 object-cover"
                           />
                           <div className="p-4">
                             <h3 className="font-semibold text-lg mb-2">
-                              {ex.name}
+                              {item.title}
                             </h3>
 
                             <div className="flex flex-wrap gap-2 mb-3">
-                              {ex.tags.map((tag, tIndex) => (
+                              {item.tags.map((tag, tIndex) => (
                                 <span
                                   key={tIndex}
                                   className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full"
@@ -610,7 +604,7 @@ const Input = () => {
                             </div>
 
                             <a
-                              href={ex.source}
+                              href={item.link}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-600 font-medium hover:underline"

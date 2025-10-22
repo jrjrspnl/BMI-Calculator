@@ -1,36 +1,42 @@
-const exerciseData = {
-  exercises: [
+const exercise = {
+  Underweight: [
     {
-      name: "Walking",
-      tags: ["low-impact", "cardio", "Obesity"],
-      source: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
-      image: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      title: "Walking",
+      tags: ["flexibility", "relaxation"],
+      link: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      image:
+        "https://www.healthline.com/hlcmsresource/images/topic_centers/2021-01-14-Underweight-732x549-Thumbnail.jpg",
     },
+  ],
+
+  Healthy: [
     {
-      name: "Swimming",
-      tags: ["cardio", "Obesity", "full-body"],
-      source: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
-      image: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      title: "Jogging",
+      tags: ["cardio", "endurance"],
+      link: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      image:
+        "https://www.healthline.com/hlcmsresource/images/topic_centers/2021-01-14-Underweight-732x549-Thumbnail.jpg",
     },
+  ],
+
+  Overweight: [
     {
-      name: "Push-ups",
-      tags: ["strength", "Overweight", "upper-body"],
-      source: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
-      image: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      title: "Jogging",
+      tags: ["strength", "upper-body"],
+      link: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      image:
+        "https://www.healthline.com/hlcmsresource/images/topic_centers/2021-01-14-Underweight-732x549-Thumbnail.jpg",
     },
+  ],
+
+  Obesity: [
     {
-      name: "Jogging",
-      tags: ["cardio", "Healthy", "endurance"],
-      source: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
-      image: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
-    },
-    {
-      name: "Yoga",
-      tags: ["flexibility", "Underweight", "relaxation"],
-      source: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
-      image: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      title: "Walking",
+      tags: ["cardio", "low-impact"],
+      link: "https://via.placeholder.com/300x200?text=Healthy+Meal+Plan",
+      image:
+        "https://www.healthline.com/hlcmsresource/images/topic_centers/2021-01-14-Underweight-732x549-Thumbnail.jpg",
     },
   ],
 };
-
-export default exerciseData;
+export default exercise;
