@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import bmi from "../constants/articles";
 
 const Input = () => {
   const [unitSystem, setUnitSystem] = useState("standard");
@@ -518,8 +519,53 @@ const Input = () => {
                   View BMI Tables
                 </a>
               </div>
-              <div>
-                {/* Additional feedback or recommendations can be displayed here */}
+              <div className="mt-10">
+                <h1 className="text-2xl lg:text-2xl pb-4 font-medium text-blue-600  mt-4">
+                  Resources You Might Find Helpful
+                </h1>
+                <hr className="mb-5 border-gray-400" />
+                <div>
+                  <div>
+                    {bmiResult?.category && bmi[bmiResult.category] && (
+                      <div className="mb-8">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {bmi[bmiResult.category].map((item, index) => (
+                            <div
+                              key={index}
+                              className="bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden cursor-pointer"
+                            >
+                              <img
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-48 overflow-hidden"
+                                loading="lazy"
+                              />
+                              <div className="flex flex-col justify-between flex-grow p-4">
+                                <div>
+                                  <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+                                    {item.title}
+                                  </h3>
+                                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                                    {item.description}
+                                  </p>
+                                </div>
+                                <a
+                                  href={item.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 font-medium hover:underline"
+                                >
+                                  Read More →
+                                </a>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <hr className="mb-5 border-gray-400" />
               </div>
             </div>
           </div>
