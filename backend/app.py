@@ -1,129 +1,58 @@
-from flask import Flask, request, jsonify,render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+import json, os
+from RuleBasedLogic import classify_bmi, recommend_exercise
 
 app = Flask(__name__)
-CORS(app)  # Allow requests from React frontend
+CORS(app)  # ✅ Allow React frontend (localhost:3000) to call Flask backend
 
-@app.route("/calculate_bmi", methods=["POST"])
+# ✅ Load your custom exercise dataset
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(BASE_DIR, "exercise_data.json"), "r", encoding="utf-8") as f:
+    EXERCISE_DATA = json.load(f)
 
+
+@app.route('/calculate_bmi', methods=['POST'])
 def calculate_bmi():
     data = request.get_json()
+    unit = data.get('unit_system', 'metric')
 
-    unit_system = data.get("unit_system")
-    height_feet = data.get("height_feet")
-    height_inches = data.get("height_inches")
-    height_cm = data.get("height_cm")
-    weight_pounds = data.get("weight_pounds")
-    weight_kg = data.get("weight_kg")
-    age = data.get("age")
-    sex = data.get("sex")
-    activity_level = data.get("activity_level")
+    # ✅ Convert input based on selected unit system
+    if unit == "standard":
+        height_in_inches = (data.get('height_feet', 0) * 12) + data.get('height_inches', 0)
+        height_m = height_in_inches * 0.0254
+        weight_kg = data.get('weight_pounds', 0) * 0.453592
+    else:
+        height_m = data.get('height_cm', 0) / 100
+        weight_kg = data.get('weight_kg', 0)
 
-    # Convert to metric if needed
-    try:
-        if unit_system == "standard":
-            height_m = ((float(height_feet) * 12) + float(height_inches)) * 0.0254
-            weight_kg = float(weight_pounds) * 0.453592
-        else:
-            height_m = float(height_cm) / 100
-            weight_kg = float(weight_kg)
+    # ✅ Validate inputs
+    if height_m <= 0 or weight_kg <= 0:
+        return jsonify({"error": "Invalid height or weight"}), 400
 
-        bmi = weight_kg / (height_m ** 2)
+    # ✅ Calculate BMI
+    bmi = weight_kg / (height_m ** 2)
+    category = classify_bmi(bmi)
+    feedback = recommend_exercise(category)  # List of rule-based tags, e.g. ["cardio", "low-impact"]
 
-        if bmi < 18.5:
-          category = "Underweight"
-        elif bmi < 25:
-          category = "Healthy"
-        elif bmi < 30:
-          category = "Overweight"
-        else:
-          category = "Obesity"
+    # ✅ Match exercises from JSON dataset
+    recommended_exercises = []
+    for exercise in EXERCISE_DATA.get("exercises", []):
+        # Each exercise in JSON should have "category" or "tags" fields
+        if any(tag.lower() in [f.lower() for f in feedback] for tag in exercise.get("tags", [])):
+            recommended_exercises.append(exercise)
 
-        feedback = ""
+    # Limit the output to avoid overloading frontend
+    recommended_exercises = recommended_exercises[:5]
 
-        if bmi < 18.5 and sex == "Male" and activity_level == "Sedentary":
-          feedback = (
-            "Your BMI indicates you are underweight. As a man with a sedentary lifestyle, "
-            "your body may not be getting enough nutrients to maintain muscle mass. "
-            "Try adding more calorie-dense, nutrient-rich foods and start light exercises "
-            "to gradually build strength and metabolism."
-        )
+    # ✅ Response to frontend
+    return jsonify({
+        "bmi": round(bmi, 2),
+        "category": category,
+        "feedback": f"You are {category.lower()}. Based on your result, here are some recommended exercises.",
+        "exercises": recommended_exercises
+    })
 
-        elif bmi < 18.5 and sex == "Female" and activity_level == "Sedentary":
-          feedback = (
-            "You are underweight with a sedentary lifestyle. As a woman, you may need more "
-            "balanced nutrition with healthy fats, protein, and iron to support hormonal health. "
-            "Gentle physical activity can also help improve energy and appetite."
-        )
-
-        elif bmi < 18.5 and activity_level in ["Active", "Very Active"]:
-            feedback = (
-                "Your BMI is underweight, but your activity level is high. Ensure you’re consuming "
-                "enough calories and nutrients to support your energy output and maintain a healthy weight."
-            )
-
-        elif 18.5 <= bmi < 25:
-            feedback = (
-                "Your BMI is in the healthy range. Keep maintaining your balanced diet and "
-                "regular physical activity to stay fit and strong."
-            )
-
-        elif 25 <= bmi < 30 and sex == "Male" and activity_level == "Sedentary":
-            feedback = (
-                "Your BMI suggests you’re slightly overweight. As a sedentary male, try incorporating "
-                "light exercises like walking or home workouts, and reduce sugary or processed foods "
-                "to manage your weight."
-            )
-
-        elif 25 <= bmi < 30 and sex == "Female" and activity_level == "Lightly Active":
-            feedback = (
-                "You’re slightly above the healthy BMI range. As a lightly active woman, "
-                "consider increasing your movement through daily activities and focusing on "
-                "balanced, portion-controlled meals."
-            )
-
-        elif bmi >= 30:
-            feedback = (
-                "Your BMI falls in the obesity range. This can increase the risk of chronic diseases. "
-                "Consider consulting a healthcare professional for a tailored diet and exercise plan "
-                "to gradually reach a healthier weight."
-            )
-        else:
-            feedback = (
-                "Your BMI result has been calculated. For more accurate advice, consider reviewing "
-                "your daily habits, diet, and physical activity."
-            )
-        
-
-        result = {
-            "bmi": round(bmi, 1),
-            "category": category,
-            "age": age,
-            "sex": sex,
-            "activity_level": activity_level,
-            "feedback": feedback
-        }
-
-        return jsonify(result), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-# def recommend_exercise(category):
-#     rules = {
-#         "Underweight": ["chest", "back"],        # focus on strength
-#         "Normal": ["cardio", "upper arms"],      # maintain balance
-#         "Overweight": ["cardio", "waist"],       # focus on fat burn
-#         "Obese": ["cardio", "lower legs"]        # low-impact movement
-#     }
-#     return rules.get(category, ["cardio"])
-
-
-# EXERCISE_API_URL = "https://exercisedb.p.rapidapi.com/exercises"
-# HEADERS = {
-#     "x-rapidapi-key": "5ea4c5268emshd8c69dd0ecdab5ep1013bfjsn096490deb16d",
-#     "x-rapidapi-host": "exercisedb.p.rapidapi.com"
-# }
 
 if __name__ == "__main__":
-    app.run(debug=True,port=5001)
+    app.run(debug=True, port=5001)

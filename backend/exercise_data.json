@@ -1,0 +1,34 @@
+{
+  "exercises": [
+    {
+      "name": "Walking",
+      "tags": ["low-impact", "cardio", "obese"],
+      "source": "https://www.healthline.com/health/fitness-exercise-for-obese-beginners",
+      "image": "https://via.placeholder.com/300x200?text=Walking"
+    },
+    {
+      "name": "Swimming",
+      "tags": ["cardio", "obese", "full-body"],
+      "source": "https://www.medicalnewstoday.com/articles/swimming-for-weight-loss",
+      "image": "https://via.placeholder.com/300x200?text=Swimming"
+    },
+    {
+      "name": "Push-ups",
+      "tags": ["strength", "overweight", "upper-body"],
+      "source": "https://www.verywellfit.com/how-to-do-pushups-748444",
+      "image": "https://via.placeholder.com/300x200?text=Push-ups"
+    },
+    {
+      "name": "Jogging",
+      "tags": ["cardio", "normal", "endurance"],
+      "source": "https://www.runnersworld.com/uk/training/beginners/a760489/running-for-beginners/",
+      "image": "https://via.placeholder.com/300x200?text=Jogging"
+    },
+    {
+      "name": "Yoga",
+      "tags": ["flexibility", "underweight", "relaxation"],
+      "source": "https://www.healthline.com/nutrition/yoga-benefits",
+      "image": "https://via.placeholder.com/300x200?text=Yoga"
+    }
+  ]
+}

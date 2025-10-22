@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+
+
 const Input = () => {
   const [unitSystem, setUnitSystem] = useState("standard");
   const [heightFeet, setHeightFeet] = useState("");
@@ -28,7 +30,7 @@ const Input = () => {
       sex,
       activity_level: activityLevel,
     };
-
+  
     try {
       const response = await fetch("http://127.0.0.1:5001/calculate_bmi", {
         method: "POST",
@@ -484,13 +486,54 @@ const Input = () => {
                   View BMI Tables
                 </a>
               </div>
-              <p className="text-lg pt-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
-                accusamus cum ipsam sunt aperiam saepe quasi minus ullam animi
-                quisquam adipisci ea explicabo voluptas expedita, eum esse quam
-                sequi, numquam id quibusdam similique recusandae soluta, nostrum
-                inventore? Nisi, ratione ipsum.
-              </p>
+              <div className="text-lg pt-5">
+                  {/* 🏋️ Exercise Recommendations Section */}
+                  {bmiResult?.exercises && (
+                    <div className="mt-6">
+                      <h2 className="text-2xl font-semibold text-blue-700 mb-4 text-center">
+                        Recommended Exercises
+                      </h2>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {bmiResult.exercises.map((ex, index) => (
+                          <div
+                            key={index}
+                            className="border rounded-xl shadow-md overflow-hidden bg-white transition-transform hover:scale-105"
+                          >
+                            <img
+                              src={ex.image}
+                              alt={ex.name}
+                              className="w-full h-48 object-cover"
+                            />
+                            <div className="p-4">
+                              <h3 className="font-bold text-lg mb-2">{ex.name}</h3>
+
+                              {/* ✅ NEW: Show tags */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {ex.tags && ex.tags.map((tag, tIndex) => (
+                                <span
+                                  key={tIndex}
+                                  className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                              <a
+                                href={ex.source}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 text-sm hover:underline"
+                              >
+                                Learn more
+                              </a>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
             </div>
           </div>
         </div>
